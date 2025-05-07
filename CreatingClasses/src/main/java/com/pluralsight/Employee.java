@@ -1,5 +1,7 @@
 package com.pluralsight;
 
+import java.time.LocalDateTime;
+
 public class Employee {
     private String employeeId;
     private String name;
@@ -7,6 +9,7 @@ public class Employee {
     private double payRate;
     private double hoursWorked;
     private double startTime;
+
 
     public static final double employeeHoursBeforeOvertime = 40.0;
     public String getEmployeeId() {
@@ -39,14 +42,31 @@ public class Employee {
     public double getOvertimeHours(){
         return Math.max(0, hoursWorked - employeeHoursBeforeOvertime);
     }
-    public void punchIn(double startTime){
-        this.startTime = startTime;
+    public void punchInTime(double time){
+        this.startTime = time;
     }
-    public void punchOut(double endTime){
-        if (endTime> startTime){
-            hoursWorked+= endTime - startTime;
+    public void punchOutTime(double time){
+        if (time> startTime){
+            hoursWorked+= time - startTime;
+        }else{
+            throw new IllegalArgumentException("end time must be greater than start time");
         }
     }
+    public void punchIn(){
+        LocalDateTime now = LocalDateTime.now();
+        this.startTime =now.getHour() + now.getMinute() / 60;
+    }
+    public void punchOut() {
+        LocalDateTime now =LocalDateTime.now();
+        double endtime = now.getHour() + now.getMinute() / 60;
+        if (endtime > startTime){
+            hoursWorked += endtime - startTime;
+        }else{
+            throw new IllegalArgumentException("end time must be greater than start time");
+
+        }
+    }
+
     public Employee(String employeeId, String name, String department, double payRate, int hoursWorked) {
         this.employeeId = employeeId;
         this.name = name;
